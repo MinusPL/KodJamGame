@@ -20,4 +20,14 @@ public class TestInteractable : MonoBehaviour, IInteractable
     {
         transform.Rotate(0, 0, 360 * Time.deltaTime);
     }
+
+    public void Highlight()
+    {
+        
+    }
+
+    public void Unhighlight()
+    {
+        
+    }
 }

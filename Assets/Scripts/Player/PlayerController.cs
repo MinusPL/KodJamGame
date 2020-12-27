@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IInventory
 {
     // Start is called before the first frame update
     public Light _flashlight;
@@ -42,6 +43,8 @@ public class PlayerController : MonoBehaviour
 
     private ICollectable toCollect = null;
     private IInteractable toInteract = null;
+    
+    public List<IItemStack> Inventory { get; }
 
     void Start()
     {
@@ -60,7 +63,6 @@ public class PlayerController : MonoBehaviour
         if(toInteract != null)
             Debug.Log("Press Enter To Interact");
         
-        Debug.Log(Input.GetButton("Select"));
         if (toCollect != null && (Input.GetButtonDown("Select")))
         {
             toCollect.Collect(this);
@@ -84,8 +86,27 @@ public class PlayerController : MonoBehaviour
 
     void CheckInteraction(RaycastHit hit)
     {
-        toCollect = hit.collider.CompareTag("Collectable") ? hit.collider.GetComponent<ICollectable>() : null;
-        toInteract = hit.collider.CompareTag("Interactable") ? hit.collider.GetComponent<IInteractable>() : null;
+        if (hit.collider.CompareTag("Collectable"))
+        {
+            toCollect = hit.collider.GetComponent<ICollectable>();
+            toCollect.Highlight();
+        }
+        else
+        {
+            toCollect?.Unhighlight();
+            toCollect = null;
+        }
+
+        if (hit.collider.CompareTag("Interactable"))
+        {
+            toInteract = hit.collider.GetComponent<IInteractable>();
+            toInteract.Highlight();
+        }
+        else
+        {
+            toInteract?.Unhighlight();
+            toInteract = null;
+        }
     }
 
     void MoveCharacter()
@@ -142,5 +163,37 @@ public class PlayerController : MonoBehaviour
 
         transform.eulerAngles = Vector3.up * smoothYaw;
         _cam.transform.localEulerAngles = Vector3.right * smoothPitch;
+    }
+    public void AddItem(IItemStack item)
+    {
+        IItemStack inventoryObj = Inventory.Find(x => x.ItemID == item.ItemID);
+        if (inventoryObj != null)
+            inventoryObj.Amount += item.ItemID;
+        else
+            Inventory.Add(item);
+    }
+
+    public int ItemsCount()
+    {
+        return Inventory.Count;
+    }
+
+    public IItemStack GetItem(int index)
+    {
+        return Inventory[index];
+    }
+
+    public void RemoveItem(int index)
+    {
+        Inventory.RemoveAt(index);
+    }
+
+    public void DecreaseAmount(int index, uint amount)
+    {
+        Inventory[index].Amount -= amount;
+        if (Inventory[index].Amount <= 0)
+        {
+            Inventory.RemoveAt(index);
+        }
     }
 }
