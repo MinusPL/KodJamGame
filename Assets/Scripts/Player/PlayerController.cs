@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IInventory
 {
     // Start is called before the first frame update
     public Light _flashlight;
@@ -15,6 +17,8 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 8;
     public float gravity = 18;
     public float maxFallingSpeed = -10.0f;
+
+    public float interactDistance = 20.0f;
 
     public float yaw;
     public float pitch;
@@ -37,6 +41,11 @@ public class PlayerController : MonoBehaviour
     bool disabled;
     float lastGroundTime;
 
+    private ICollectable toCollect = null;
+    private IInteractable toInteract = null;
+    
+    public List<IItemStack> Inventory { get; }
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -48,12 +57,66 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        MoveCharacter();
+        if(toCollect != null)
+            Debug.Log("Press Enter To Collect");
+        if(toInteract != null)
+            Debug.Log("Press Enter To Interact");
+        
+        if (toCollect != null && (Input.GetButtonDown("Select")))
+        {
+            toCollect.Collect(this);
+        }
+        else if(toInteract != null && (Input.GetButtonDown("Select")))
+        {
+            toInteract.Interact(this);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        RaycastHit hit;
+        Ray ray = _cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
+        Debug.DrawRay(ray.origin, ray.direction * 1000, Color.white);
+        if (Physics.Raycast(ray, out hit, interactDistance))
+        {
+            CheckInteraction(hit);
+        }
+    }
+
+    void CheckInteraction(RaycastHit hit)
+    {
+        if (hit.collider.CompareTag("Collectable"))
+        {
+            toCollect = hit.collider.GetComponent<ICollectable>();
+            toCollect.Highlight();
+        }
+        else
+        {
+            toCollect?.Unhighlight();
+            toCollect = null;
+        }
+
+        if (hit.collider.CompareTag("Interactable"))
+        {
+            toInteract = hit.collider.GetComponent<IInteractable>();
+            toInteract.Highlight();
+        }
+        else
+        {
+            toInteract?.Unhighlight();
+            toInteract = null;
+        }
+    }
+
+    void MoveCharacter()
+    {
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
         Vector3 inputDir = new Vector3(input.x, 0, input.y).normalized;
         Vector3 worldInputDir = transform.TransformDirection(inputDir);
-
-        float currentSpeed = (Input.GetKey(KeyCode.LeftShift)) ? runSpeed : walkSpeed;
+        
+        float currentSpeed = (Input.GetButton("Run")) ? runSpeed : walkSpeed;
         Vector3 targetVelocity = worldInputDir * currentSpeed;
         velocity = Vector3.SmoothDamp(velocity, targetVelocity, ref smoothV, smoothMoveTime);
 
@@ -70,7 +133,7 @@ public class PlayerController : MonoBehaviour
             verticalVelocity = 0;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetButtonDown("Jump"))
         {
             float timeSinceLastTouchedGround = Time.time - lastGroundTime;
             if (controller.isGrounded || (!jumping && timeSinceLastTouchedGround < 0.15f))
@@ -100,6 +163,37 @@ public class PlayerController : MonoBehaviour
 
         transform.eulerAngles = Vector3.up * smoothYaw;
         _cam.transform.localEulerAngles = Vector3.right * smoothPitch;
+    }
+    public void AddItem(IItemStack item)
+    {
+        IItemStack inventoryObj = Inventory.Find(x => x.ItemID == item.ItemID);
+        if (inventoryObj != null)
+            inventoryObj.Amount += item.ItemID;
+        else
+            Inventory.Add(item);
+    }
 
+    public int ItemsCount()
+    {
+        return Inventory.Count;
+    }
+
+    public IItemStack GetItem(int index)
+    {
+        return Inventory[index];
+    }
+
+    public void RemoveItem(int index)
+    {
+        Inventory.RemoveAt(index);
+    }
+
+    public void DecreaseAmount(int index, uint amount)
+    {
+        Inventory[index].Amount -= amount;
+        if (Inventory[index].Amount <= 0)
+        {
+            Inventory.RemoveAt(index);
+        }
     }
 }
