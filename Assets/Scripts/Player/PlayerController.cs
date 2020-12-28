@@ -8,7 +8,6 @@ public class PlayerController : MonoBehaviour, IInventory
 {
     // Start is called before the first frame update
     public Light _flashlight;
-    public Light _unlight;
     public Camera _cam;
 
     public float walkSpeed = 3;
@@ -49,9 +48,7 @@ public class PlayerController : MonoBehaviour, IInventory
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        _flashlight.enabled = true;
-        _unlight.enabled = false;
-        _unlight.color = new Color(-1.0f, -1.0f, -1.0f);
+        _flashlight.enabled = false;
     }
 
     // Update is called once per frame
