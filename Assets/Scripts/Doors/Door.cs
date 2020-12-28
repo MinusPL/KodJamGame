@@ -12,6 +12,7 @@ public class Door : MonoBehaviour, IInteractable
 
     public DoorDirection doorDirection;
     public GameObject origin;
+    public float openingSpeed = 90.0f;
     
     private DoorState state = DoorState.CLOSED;
     private Vector3 initialPosiiton;
@@ -31,14 +32,14 @@ public class Door : MonoBehaviour, IInteractable
             if (doorDirection == DoorDirection.RIGHT)
             {
                 if (transform.localRotation.eulerAngles.y > 90)
-                    transform.RotateAround(origin.transform.position, Vector3.up, -20 * Time.deltaTime);
+                    transform.RotateAround(origin.transform.position, Vector3.up, -openingSpeed * Time.deltaTime);
                 else
                     state = DoorState.OPENED;
             }
             else if (doorDirection == DoorDirection.LEFT)
             {
                 if (transform.localRotation.eulerAngles.y < 90)
-                    transform.RotateAround(origin.transform.position, Vector3.up, 20 * Time.deltaTime);
+                    transform.RotateAround(origin.transform.position, Vector3.up, openingSpeed * Time.deltaTime);
                 else
                     state = DoorState.OPENED;
             }
@@ -48,14 +49,14 @@ public class Door : MonoBehaviour, IInteractable
             if (doorDirection == DoorDirection.RIGHT)
             {
                 if (transform.localRotation.eulerAngles.y < 180)
-                    transform.RotateAround(origin.transform.position, Vector3.up, 20 * Time.deltaTime);
+                    transform.RotateAround(origin.transform.position, Vector3.up, openingSpeed * Time.deltaTime);
                 else
                     state = DoorState.CLOSED;
             }
             else if (doorDirection == DoorDirection.LEFT)
             {
                 if (transform.localRotation.eulerAngles.y > 0 && transform.localRotation.eulerAngles.y < 180)
-                    transform.RotateAround(origin.transform.position, Vector3.up, -20 * Time.deltaTime);
+                    transform.RotateAround(origin.transform.position, Vector3.up, -openingSpeed * Time.deltaTime);
                 else
                     state = DoorState.CLOSED;
             }

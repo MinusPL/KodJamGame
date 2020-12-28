@@ -6,6 +6,7 @@ public class Drawer : MonoBehaviour, IInteractable
 {
     public DoorState state = DoorState.CLOSED;
     public float distanceToOpen = 0.5f;
+    public float speedOfOpening = 5f;
     private Vector3 initialPosiiton;
     // Start is called before the first frame update
     void Start()
@@ -20,7 +21,7 @@ public class Drawer : MonoBehaviour, IInteractable
         {
             if (transform.localPosition.x > initialPosiiton.x - distanceToOpen)
             {
-                transform.localPosition -= Vector3.right * (5 * Time.deltaTime);
+                transform.localPosition -= Vector3.right * (speedOfOpening * Time.deltaTime);
             }
             else
             {
@@ -32,7 +33,7 @@ public class Drawer : MonoBehaviour, IInteractable
         {
             if (transform.localPosition.x < initialPosiiton.x)
             {
-                transform.localPosition += Vector3.right * (5 * Time.deltaTime);
+                transform.localPosition += Vector3.right * (speedOfOpening * Time.deltaTime);
             }
             else
             {
