@@ -4,5 +4,5 @@ public interface IItemStack
     string ItemName { get; set; }
     string ItemDescription { get; set; }
     uint Amount { get; set; }
-    void UseItem();
+    void UseItem(PlayerController player);
 }

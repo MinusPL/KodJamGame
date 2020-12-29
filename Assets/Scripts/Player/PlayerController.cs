@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour, IInventory
     private ICollectable toCollect = null;
     private IInteractable toInteract = null;
     
-    public List<IItemStack> Inventory { get; }
+    public List<IItemStack> Inventory { get; private set; }
 
     private int choosenLight = -1;
     private int previousLight = -1;
@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour, IInventory
 
     void Start()
     {
+        Inventory = new List<IItemStack>();
         controller = GetComponent<CharacterController>();
         ssControler = GetComponent<SphereSpawnController>();
         _flashlight.enabled = false;
