@@ -45,11 +45,28 @@ public class PlayerController : MonoBehaviour, IInventory
     
     public List<IItemStack> Inventory { get; }
 
+    private int choosenLight = -1;
+    private int previousLight = -1;
+
+    public GameObject armLantern;
+    public GameObject armFlashlight;
+
+    SphereSpawnController ssControler;
+
+    float SphereGrowTime = 0.0f;
+    bool hidingLantern = false;
+    bool shouldShowFlashlight = false;
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        ssControler = GetComponent<SphereSpawnController>();
         _flashlight.enabled = false;
+        armFlashlight.SetActive(false);
+        armLantern.SetActive(false);
     }
+
+    
 
     // Update is called once per frame
     void Update()
@@ -67,6 +84,84 @@ public class PlayerController : MonoBehaviour, IInventory
         else if(toInteract != null && (Input.GetButtonDown("Select")))
         {
             toInteract.Interact(this);
+        }
+
+        if (Input.GetButtonDown("Lantern"))
+        {
+            choosenLight = 2;
+            ChooseLight();
+        }
+        if (Input.GetButtonDown("Flashlight"))
+        {
+            choosenLight = 1;
+            ChooseLight();
+        }
+
+        if(hidingLantern)
+        {
+            SphereGrowTime += Time.deltaTime;
+            if (SphereGrowTime >= ssControler.growTime)
+            {
+                armLantern.SetActive(false);
+                armFlashlight.SetActive(shouldShowFlashlight);
+                _flashlight.enabled = shouldShowFlashlight;
+                SphereGrowTime = 0.0f;
+                hidingLantern = false;
+            }
+        }
+    }
+
+    private void ChooseLight()
+    {
+        if(!hidingLantern)
+        {
+            if (choosenLight == 2)
+            {
+                if (armFlashlight.activeSelf)
+                {
+                    armFlashlight.SetActive(false);
+                    _flashlight.enabled = false;
+                }
+                if (armLantern.activeSelf)
+                {
+                    hidingLantern = true;
+                    shouldShowFlashlight = false;
+                    ssControler.SpawnBigSphere(false);
+                }
+                else
+                {
+                    armLantern.SetActive(true);
+                    ssControler.SpawnBigSphere(true);
+                }
+            }
+            else if (choosenLight == 1)
+            {
+                if (armLantern.activeSelf)
+                {
+                    hidingLantern = true;
+                    shouldShowFlashlight = true;
+                    ssControler.SpawnBigSphere(false);
+                }
+                else
+                {
+                    armFlashlight.SetActive(!armFlashlight.activeSelf);
+                    _flashlight.enabled = armFlashlight.activeSelf;
+                }
+            }
+            else
+            {
+                if (armLantern.activeSelf)
+                {
+                    hidingLantern = true;
+                    shouldShowFlashlight = false;
+                    ssControler.SpawnBigSphere(false);
+                }
+                if (armFlashlight.activeSelf)
+                {
+                    armFlashlight.SetActive(false);
+                    _flashlight.enabled = false;
+                }
+            }
         }
     }
 
@@ -192,5 +287,20 @@ public class PlayerController : MonoBehaviour, IInventory
         {
             Inventory.RemoveAt(index);
         }
+    }
+
+    public bool IsDarkDimension()
+    {
+        return choosenLight == 2;
+    }
+
+    public bool GetDimensionChanged()
+    {
+        if(previousLight != choosenLight)
+        {
+            choosenLight = previousLight;
+            return true;   
+        }
+        return false;
     }
 }
