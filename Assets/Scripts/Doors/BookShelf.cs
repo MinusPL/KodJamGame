@@ -6,7 +6,8 @@ public class BookShelf : MonoBehaviour, IInteractable
 {
     public float distanceToOpen = 20f;
     public float speedOfOpening = 20f;
-    public GameObject bookCase;
+    public float bookOpenDistance = 0.1f;
+    public GameObject bookCase ;
     
     
     public DoorState state = DoorState.CLOSED;
@@ -15,7 +16,7 @@ public class BookShelf : MonoBehaviour, IInteractable
     // Start is called before the first frame update
     void Start()
     {
-        initialBookPosition = transform.position;
+        initialBookPosition = transform.localPosition;
         initialBookShelfPosition = bookCase.transform.position;
     }
 
@@ -55,10 +56,12 @@ public class BookShelf : MonoBehaviour, IInteractable
         if (state == DoorState.CLOSED)
         {
             state = DoorState.OPENING;
+            transform.localPosition += Vector3.left * bookOpenDistance;
         }
         else if (state == DoorState.OPENED)
         {
             state = DoorState.CLOSING;
+            transform.localPosition -= Vector3.left * bookOpenDistance;
         }
     }
 
