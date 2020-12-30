@@ -421,7 +421,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6654084919009831968, guid: 1238515e7a91fb345ab075bb0e396c65, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6654084919009831968, guid: 1238515e7a91fb345ab075bb0e396c65, type: 3}
       propertyPath: m_LocalScale.z
@@ -525,8 +525,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2325167143473460518, guid: 7969fe0aabc0c0e428b5c163c5dbf42c, type: 3}
+      propertyPath: collectDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2325167143473460518, guid: 7969fe0aabc0c0e428b5c163c5dbf42c, type: 3}
       propertyPath: interactDistance
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2325167143473460519, guid: 7969fe0aabc0c0e428b5c163c5dbf42c, type: 3}
       propertyPath: m_Height
@@ -640,6 +644,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1346879222}
     m_Modifications:
+    - target: {fileID: 4616038501713500733, guid: 680c1fa9c98f4b143b3afd8be46da699, type: 3}
+      propertyPath: HighlightMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 300e817378c9bd54b9537325653ddf0c, type: 2}
+    - target: {fileID: 4616038501713500735, guid: 680c1fa9c98f4b143b3afd8be46da699, type: 3}
+      propertyPath: HighlightMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 300e817378c9bd54b9537325653ddf0c, type: 2}
+    - target: {fileID: 4616038501713500736, guid: 680c1fa9c98f4b143b3afd8be46da699, type: 3}
+      propertyPath: HighlightMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 300e817378c9bd54b9537325653ddf0c, type: 2}
+    - target: {fileID: 4616038501713500737, guid: 680c1fa9c98f4b143b3afd8be46da699, type: 3}
+      propertyPath: HighlightMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 300e817378c9bd54b9537325653ddf0c, type: 2}
+    - target: {fileID: 4616038501713500741, guid: 680c1fa9c98f4b143b3afd8be46da699, type: 3}
+      propertyPath: HighlightMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 300e817378c9bd54b9537325653ddf0c, type: 2}
     - target: {fileID: 5153753986927803814, guid: 680c1fa9c98f4b143b3afd8be46da699, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -1658,6 +1682,10 @@ PrefabInstance:
       propertyPath: distanceToOpen
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3455771721152981411, guid: c40b21ba49d2a004891fcc583b9dcc6f, type: 3}
+      propertyPath: HighlightMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 300e817378c9bd54b9537325653ddf0c, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c40b21ba49d2a004891fcc583b9dcc6f, type: 3}
 --- !u!4 &904524528 stripped
@@ -3436,9 +3464,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1346879222}
     m_Modifications:
+    - target: {fileID: 2672705340378086135, guid: 4b139602208d4414999b645e1855bfad, type: 3}
+      propertyPath: HighlightMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 300e817378c9bd54b9537325653ddf0c, type: 2}
     - target: {fileID: 2672705340471430868, guid: 4b139602208d4414999b645e1855bfad, type: 3}
       propertyPath: m_Name
-      value: door
+      value: exitDoorPH
       objectReference: {fileID: 0}
     - target: {fileID: 2672705340471430869, guid: 4b139602208d4414999b645e1855bfad, type: 3}
       propertyPath: m_RootOrder

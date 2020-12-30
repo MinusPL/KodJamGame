@@ -83,6 +83,14 @@ public class Door : MonoBehaviour, IInteractable
         {
             state = DoorState.CLOSING;
         }
+        else if (state == DoorState.OPENING)
+        {
+            state = DoorState.CLOSING;
+        }
+        else if (state == DoorState.CLOSING)
+        {
+            state = DoorState.OPENING;
+        }
     }
 
     public void Highlight()
