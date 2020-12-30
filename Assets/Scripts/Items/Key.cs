@@ -19,6 +19,7 @@ public class Key : Item
     // Start is called before the first frame update
     void Start()
     {
+        base.Start();
         itemStack = new KeyItemStack
         {
             ItemID = itemId,

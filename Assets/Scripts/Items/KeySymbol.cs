@@ -19,6 +19,7 @@ public class KeySymbol : Item
     // Start is called before the first frame update
     void Start()
     {
+        base.Start();
         itemStack = new KeySymbolItemStack
         {
             ItemID = itemId,

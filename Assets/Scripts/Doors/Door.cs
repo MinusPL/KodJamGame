@@ -17,6 +17,7 @@ public class Door : MonoBehaviour, IInteractable
     private DoorState state = DoorState.CLOSED;
     private Vector3 initialPosiiton;
     private Quaternion initialRotation;
+    
     // Start is called before the first frame update
     void Start()
     {

@@ -73,11 +73,7 @@ public class PlayerController : MonoBehaviour, IInventory
     void Update()
     {
         MoveCharacter();
-        if(toCollect != null)
-            Debug.Log("Press Enter To Collect");
-        if(toInteract != null)
-            Debug.Log("Press Enter To Interact");
-        
+
         if (toCollect != null && (Input.GetButtonDown("Select")))
         {
             toCollect.Collect(this);
@@ -175,25 +171,61 @@ public class PlayerController : MonoBehaviour, IInventory
         {
             CheckInteraction(hit);
         }
+        else
+        {
+            toCollect = null;
+            toInteract = null;
+        }
     }
 
     void CheckInteraction(RaycastHit hit)
     {
         if (hit.collider.CompareTag("Collectable"))
         {
-            toCollect = hit.collider.GetComponent<ICollectable>();
-            toCollect.Highlight();
+            if (toCollect == null)
+            {
+                toCollect = hit.collider.GetComponent<ICollectable>();
+                toCollect.Highlight();
+            }
+            else
+            {
+                ICollectable newCollect = hit.collider.GetComponent<ICollectable>();
+                if (newCollect != toCollect)
+                {
+                    toCollect.Unhighlight();
+                    toCollect = newCollect;
+                    toCollect.Highlight();
+                }
+            }
         }
         else
         {
-            toCollect?.Unhighlight();
+            if (toCollect != null)
+            {
+                var toFuckingDelete = toCollect;
+                toCollect = null;
+                toFuckingDelete.Unhighlight();
+            }
             toCollect = null;
         }
 
         if (hit.collider.CompareTag("Interactable"))
         {
-            toInteract = hit.collider.GetComponent<IInteractable>();
-            toInteract.Highlight();
+            if (toInteract == null)
+            {
+                toInteract = hit.collider.GetComponent<IInteractable>();
+                toInteract.Highlight();
+            }
+            else
+            {
+                IInteractable newInteract = hit.collider.GetComponent<IInteractable>();
+                if (newInteract != toInteract)
+                {
+                    toInteract.Unhighlight();
+                    toInteract = newInteract;
+                    toInteract.Highlight();
+                }
+            }
         }
         else
         {
