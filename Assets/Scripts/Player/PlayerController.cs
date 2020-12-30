@@ -181,8 +181,21 @@ public class PlayerController : MonoBehaviour, IInventory
     {
         if (hit.collider.CompareTag("Collectable"))
         {
-            toCollect = hit.collider.GetComponent<ICollectable>();
-            toCollect.Highlight();
+            if (toCollect == null)
+            {
+                toCollect = hit.collider.GetComponent<ICollectable>();
+                toCollect.Highlight();
+            }
+            else
+            {
+                ICollectable newCollect = hit.collider.GetComponent<ICollectable>();
+                if (newCollect != toCollect)
+                {
+                    toCollect.Unhighlight();
+                    toCollect = newCollect;
+                    toCollect.Highlight();
+                }
+            }
         }
         else
         {
@@ -192,8 +205,21 @@ public class PlayerController : MonoBehaviour, IInventory
 
         if (hit.collider.CompareTag("Interactable"))
         {
-            toInteract = hit.collider.GetComponent<IInteractable>();
-            toInteract.Highlight();
+            if (toCollect == null)
+            {
+                toInteract = hit.collider.GetComponent<IInteractable>();
+                toInteract.Highlight();
+            }
+            else
+            {
+                IInteractable newInteract = hit.collider.GetComponent<IInteractable>();
+                if (newInteract != toInteract)
+                {
+                    toInteract.Unhighlight();
+                    toInteract = newInteract;
+                    toInteract.Highlight();
+                }
+            }
         }
         else
         {
