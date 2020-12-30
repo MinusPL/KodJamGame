@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour, IInventory
 {
@@ -19,6 +20,8 @@ public class PlayerController : MonoBehaviour, IInventory
 
     public float interactDistance = 20.0f;
     public float collectDistance = 20.0f;
+
+    public uint maxHealth;
 
     public float yaw;
     public float pitch;
@@ -43,6 +46,8 @@ public class PlayerController : MonoBehaviour, IInventory
 
     private ICollectable toCollect = null;
     private IInteractable toInteract = null;
+
+    private uint currentHealth;
     
     public List<IItemStack> Inventory { get; private set; }
 
@@ -66,6 +71,7 @@ public class PlayerController : MonoBehaviour, IInventory
         _flashlight.enabled = false;
         armFlashlight.SetActive(false);
         armLantern.SetActive(false);
+        currentHealth = maxHealth;
     }
 
     
@@ -349,5 +355,14 @@ public class PlayerController : MonoBehaviour, IInventory
             return true;   
         }
         return false;
+    }
+
+    public void DecreaseHealth()
+    {
+        currentHealth--;
+        if (currentHealth == 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        }
     }
 }
