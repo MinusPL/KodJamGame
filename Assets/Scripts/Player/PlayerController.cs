@@ -73,11 +73,7 @@ public class PlayerController : MonoBehaviour, IInventory
     void Update()
     {
         MoveCharacter();
-        /*if(toCollect != null)
-            Debug.Log("Press Enter To Collect");
-        if(toInteract != null)
-            Debug.Log("Press Enter To Interact");*/
-        
+
         if (toCollect != null && (Input.GetButtonDown("Select")))
         {
             toCollect.Collect(this);
