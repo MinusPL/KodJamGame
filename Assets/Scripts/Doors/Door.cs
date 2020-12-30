@@ -13,11 +13,13 @@ public class Door : MonoBehaviour, IInteractable
     public DoorDirection doorDirection;
     public GameObject origin;
     public float openingSpeed = 90.0f;
+    public bool locked = false;
+    public uint keyId;
     
     private DoorState state = DoorState.CLOSED;
     private Vector3 initialPosiiton;
     private Quaternion initialRotation;
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -75,6 +77,13 @@ public class Door : MonoBehaviour, IInteractable
 
     public void Interact(PlayerController playerController)
     {
+        if (locked)
+        {
+            if (playerController.Inventory.Find(x => x.ItemID == keyId) == null)
+            {
+                return;
+            }
+        }
         if (state == DoorState.CLOSED)
         {
             state = DoorState.OPENING;
