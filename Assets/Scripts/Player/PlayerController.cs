@@ -45,6 +45,8 @@ public class PlayerController : MonoBehaviour, IInventory
     private IInteractable toInteract = null;
     
     public List<IItemStack> Inventory { get; private set; }
+    public GameObject inventoryObject;
+    public InventoryController inventoryController;
 
     private int choosenLight = -1;
     private int previousLight = -1;
@@ -64,6 +66,7 @@ public class PlayerController : MonoBehaviour, IInventory
         Inventory = new List<IItemStack>();
         controller = GetComponent<CharacterController>();
         ssControler = GetComponent<SphereSpawnController>();
+        inventoryController = inventoryObject.GetComponent<InventoryController>();
         _flashlight.enabled = false;
         armFlashlight.SetActive(false);
         armLantern.SetActive(false);

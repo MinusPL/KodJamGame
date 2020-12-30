@@ -35,6 +35,12 @@ public class InventoryController : MonoBehaviour
 
     public void AddItemInSlot(IItemStack item, int slotNumber)
 	{
-        //slots[slotNumber].
+        slots[slotNumber].GetComponent<InvSlot>().SetItem(item);
+	}
+
+    public void AddItem(IItemStack item)
+	{
+        int i = slots.FindIndex(x => x.GetComponent<InvSlot>().item == null);
+        AddItemInSlot(item, i);
 	}
 }

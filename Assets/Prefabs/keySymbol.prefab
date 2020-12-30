@@ -112,4 +112,5 @@ MonoBehaviour:
   itemName: Key
   description: Key
   amount: 1
+  itemTexture: {fileID: 2800000, guid: bd79c5667da1d4a49b6124c8c5ca9fc4, type: 3}
   HighlightMaterial: {fileID: 2100000, guid: 300e817378c9bd54b9537325653ddf0c, type: 2}

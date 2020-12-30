@@ -8,11 +8,14 @@ public class InvSlot : MonoBehaviour
     public GameObject imageObject;
     public Texture texture;
 
+    public IItemStack item;
+
     RawImage image;
     // Start is called before the first frame update
     void Start()
     {
         image = imageObject.GetComponent<RawImage>();
+        item = null;
     }
 
     // Update is called once per frame
@@ -21,9 +24,11 @@ public class InvSlot : MonoBehaviour
         
     }
 
-    public void SetImage(Texture tex)
+    public void SetItem(IItemStack item)
 	{
-        this.texture = tex;
-        image.texture = tex;
+        this.item = item;
+        texture = item.ItemTexture;
+        image.texture = item.ItemTexture;
+        image.color = new Color(1, 1, 1, 1);
 	}
 }

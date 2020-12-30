@@ -8,9 +8,9 @@ public
 
     public uint itemId;
     public string itemName;
-    public string itemImage;
     public string description;
     public uint amount = 1;
+    public Texture itemTexture;
     
     public Material HighlightMaterial;
 
@@ -25,7 +25,7 @@ public
     public void Collect(PlayerController playerController)
     {
         playerController.AddItem(itemStack);
-
+        playerController.inventoryController.AddItem(itemStack);
         Destroy(gameObject);
     }
 
