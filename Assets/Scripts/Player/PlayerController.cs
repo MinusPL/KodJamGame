@@ -100,10 +100,10 @@ public class PlayerController : MonoBehaviour, IInventory
                 ChooseLight();
             }
         }
-        if (toCollect != null)
+        /*if (toCollect != null)
             Debug.Log("Press E To Collect");
         if (toInteract != null)
-            Debug.Log("Press E To Interact");
+            Debug.Log("Press E To Interact");*/
 
         if (hidingLantern)
         {

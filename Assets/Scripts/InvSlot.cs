@@ -12,7 +12,7 @@ public class InvSlot : MonoBehaviour
 
     RawImage image;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         image = imageObject.GetComponent<RawImage>();
         item = null;
@@ -28,7 +28,7 @@ public class InvSlot : MonoBehaviour
 	{
         this.item = item;
         texture = item.ItemTexture;
-        image.texture = item.ItemTexture;
+        image.texture = texture;
         image.color = new Color(1, 1, 1, 1);
-	}
+    }
 }
