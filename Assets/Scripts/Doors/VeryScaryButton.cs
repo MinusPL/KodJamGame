@@ -21,10 +21,10 @@ public class VeryScaryButton : MonoBehaviour, IInteractable
 
     public void Interact(PlayerController playerController)
     {
-        if (playerController.Inventory.Find(x => x.ItemID == keyId) == null)
+        /*if (playerController.Inventory.Find(x => x.ItemID == keyId) == null)
         {
             return;
-        }
+        }*/
         objectToMove.GetComponent<IInteractable>().Interact(playerController);
     }
 
