@@ -9,6 +9,7 @@ public class Key : Item
         public uint ItemID { get; set; }
         public string ItemName { get; set; }
         public string ItemDescription { get; set; }
+        public Texture ItemTexture { get; set; }
         public uint Amount { get; set; }
         public void UseItem(PlayerController player)
         {

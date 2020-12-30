@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class KeySymbol : Item
 {
-    private class KeySymbolItemStack: IItemStack
+    private class KeySymbolItemStack : IItemStack
     {
         public uint ItemID { get; set; }
         public string ItemName { get; set; }
         public string ItemDescription { get; set; }
+        public Texture ItemTexture {get;set;}
         public uint Amount { get; set; }
         public void UseItem(PlayerController player)
         {
@@ -25,6 +26,7 @@ public class KeySymbol : Item
             ItemID = itemId,
             ItemName = itemName,
             ItemDescription = description,
+            ItemTexture = itemTexture,
             Amount = amount
         };
         

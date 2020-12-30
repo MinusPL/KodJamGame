@@ -45,6 +45,8 @@ public class PlayerController : MonoBehaviour, IInventory
     private IInteractable toInteract = null;
     
     public List<IItemStack> Inventory { get; private set; }
+    public GameObject inventoryObject;
+    public InventoryController inventoryController;
 
     private int choosenLight = -1;
     private int previousLight = -1;
@@ -57,12 +59,14 @@ public class PlayerController : MonoBehaviour, IInventory
     float SphereGrowTime = 0.0f;
     bool hidingLantern = false;
     bool shouldShowFlashlight = false;
+    bool controlsBlocked = false;
 
     void Start()
     {
         Inventory = new List<IItemStack>();
         controller = GetComponent<CharacterController>();
         ssControler = GetComponent<SphereSpawnController>();
+        inventoryController = inventoryObject.GetComponent<InventoryController>();
         _flashlight.enabled = false;
         armFlashlight.SetActive(false);
         armLantern.SetActive(false);
@@ -73,29 +77,35 @@ public class PlayerController : MonoBehaviour, IInventory
     // Update is called once per frame
     void Update()
     {
-        MoveCharacter();
+        if (!controlsBlocked)
+        {
+            MoveCharacter();
+            if (toCollect != null && (Input.GetButtonDown("Interact")))
+            {
+                toCollect.Collect(this);
+            }
+            else if (toInteract != null && (Input.GetButtonDown("Interact")))
+            {
+                toInteract.Interact(this);
+            }
 
-        if (toCollect != null && (Input.GetButtonDown("Select")))
-        {
-            toCollect.Collect(this);
+            if (Input.GetButtonDown("Lantern"))
+            {
+                choosenLight = 2;
+                ChooseLight();
+            }
+            if (Input.GetButtonDown("Flashlight"))
+            {
+                choosenLight = 1;
+                ChooseLight();
+            }
         }
-        else if(toInteract != null && (Input.GetButtonDown("Select")))
-        {
-            toInteract.Interact(this);
-        }
+        if (toCollect != null)
+            Debug.Log("Press E To Collect");
+        if (toInteract != null)
+            Debug.Log("Press E To Interact");
 
-        if (Input.GetButtonDown("Lantern"))
-        {
-            choosenLight = 2;
-            ChooseLight();
-        }
-        if (Input.GetButtonDown("Flashlight"))
-        {
-            choosenLight = 1;
-            ChooseLight();
-        }
-
-        if(hidingLantern)
+        if (hidingLantern)
         {
             SphereGrowTime += Time.deltaTime;
             if (SphereGrowTime >= ssControler.growTime)
@@ -349,5 +359,10 @@ public class PlayerController : MonoBehaviour, IInventory
             return true;   
         }
         return false;
+    }
+
+    public void SetControlsBlocked(bool flag)
+    {
+        this.controlsBlocked = flag;
     }
 }
