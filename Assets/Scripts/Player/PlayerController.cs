@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour, IInventory
     public float maxFallingSpeed = -10.0f;
 
     public float interactDistance = 20.0f;
+    public float collectDistance = 20.0f;
 
     public float yaw;
     public float pitch;
@@ -173,12 +174,20 @@ public class PlayerController : MonoBehaviour, IInventory
         }
         else
         {
-            toCollect = null;
             toInteract = null;
+        }
+
+        if (Physics.Raycast(ray, out hit, collectDistance))
+        {
+            CheckCollactable(hit);
+        }
+        else
+        {
+            toCollect = null;
         }
     }
 
-    void CheckInteraction(RaycastHit hit)
+    void CheckCollactable(RaycastHit hit)
     {
         if (hit.collider.CompareTag("Collectable"))
         {
@@ -208,6 +217,11 @@ public class PlayerController : MonoBehaviour, IInventory
             }
             toCollect = null;
         }
+    }
+
+    void CheckInteraction(RaycastHit hit)
+    {
+        
 
         if (hit.collider.CompareTag("Interactable"))
         {
