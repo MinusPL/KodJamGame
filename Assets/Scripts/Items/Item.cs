@@ -1,12 +1,14 @@
 using System;
 using UnityEngine;
 
-public class Item : MonoBehaviour, ICollectable
+public 
+    class Item : MonoBehaviour, ICollectable
 {
-    protected IItemStack itemStack;
+    public IItemStack itemStack;
 
     public uint itemId;
     public string itemName;
+    public string itemImage;
     public string description;
     public uint amount = 1;
     
@@ -23,6 +25,7 @@ public class Item : MonoBehaviour, ICollectable
     public void Collect(PlayerController playerController)
     {
         playerController.AddItem(itemStack);
+
         Destroy(gameObject);
     }
 
