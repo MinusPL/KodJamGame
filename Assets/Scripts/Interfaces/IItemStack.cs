@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public interface IItemStack
 {
     uint ItemID { get; set; }
@@ -5,4 +7,5 @@ public interface IItemStack
     string ItemDescription { get; set; }
     uint Amount { get; set; }
     void UseItem(PlayerController player);
+    Texture ItemTexture { get; set; }
 }
