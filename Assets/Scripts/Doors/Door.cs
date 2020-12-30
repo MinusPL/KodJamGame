@@ -77,6 +77,13 @@ public class Door : MonoBehaviour, IInteractable
 
     public void Interact(PlayerController playerController)
     {
+        if (locked)
+        {
+            if (playerController.Inventory.Find(x => x.ItemID == keyId) == null)
+            {
+                return;
+            }
+        }
         if (state == DoorState.CLOSED)
         {
             state = DoorState.OPENING;
