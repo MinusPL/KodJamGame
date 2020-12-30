@@ -73,10 +73,10 @@ public class PlayerController : MonoBehaviour, IInventory
     void Update()
     {
         MoveCharacter();
-        if(toCollect != null)
+        /*if(toCollect != null)
             Debug.Log("Press Enter To Collect");
         if(toInteract != null)
-            Debug.Log("Press Enter To Interact");
+            Debug.Log("Press Enter To Interact");*/
         
         if (toCollect != null && (Input.GetButtonDown("Select")))
         {
@@ -175,10 +175,17 @@ public class PlayerController : MonoBehaviour, IInventory
         {
             CheckInteraction(hit);
         }
+        else
+        {
+            toCollect = null;
+            toInteract = null;
+        }
     }
 
     void CheckInteraction(RaycastHit hit)
     {
+        Debug.Log(hit.collider.tag);
+        Debug.Log(toCollect);
         if (hit.collider.CompareTag("Collectable"))
         {
             if (toCollect == null)
@@ -199,13 +206,18 @@ public class PlayerController : MonoBehaviour, IInventory
         }
         else
         {
-            toCollect?.Unhighlight();
+            if (toCollect != null)
+            {
+                var toFuckingDelete = toCollect;
+                toCollect = null;
+                toFuckingDelete.Unhighlight();
+            }
             toCollect = null;
         }
 
         if (hit.collider.CompareTag("Interactable"))
         {
-            if (toCollect == null)
+            if (toInteract == null)
             {
                 toInteract = hit.collider.GetComponent<IInteractable>();
                 toInteract.Highlight();
