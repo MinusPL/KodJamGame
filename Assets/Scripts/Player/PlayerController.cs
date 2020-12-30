@@ -180,8 +180,6 @@ public class PlayerController : MonoBehaviour, IInventory
 
     void CheckInteraction(RaycastHit hit)
     {
-        Debug.Log(hit.collider.tag);
-        Debug.Log(toCollect);
         if (hit.collider.CompareTag("Collectable"))
         {
             if (toCollect == null)
