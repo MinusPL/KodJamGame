@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class UIController : MonoBehaviour
 
     public GameObject inventory;
     public GameObject mainUi;
+    public GameObject healthIndicator;
 
     PlayerController playerController;
     InventoryController invController;
@@ -33,6 +35,12 @@ public class UIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        healthIndicator.GetComponent<RawImage>().color = new Color(
+                                                                    healthIndicator.GetComponent<RawImage>().color.r,
+                                                                    healthIndicator.GetComponent<RawImage>().color.g,
+                                                                    healthIndicator.GetComponent<RawImage>().color.b,
+                                                                    1 - playerController.GetHealthRatio());
+        
         bool invKey = Input.GetButtonDown("Inventory");
         bool cancelKey = Input.GetButtonDown("Cancel");
         switch (uiState)
