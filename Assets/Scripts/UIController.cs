@@ -9,19 +9,23 @@ public class UIController : MonoBehaviour
     {
         DEFAULT,
         OPEN_INV,
-        INVENTORY
+        INVENTORY,
+        MAIN_MENU
     }
 
     public GameObject player;
 
     public GameObject inventory;
     public GameObject mainUi;
+    public GameObject menu;
     public GameObject healthIndicator;
 
     PlayerController playerController;
     InventoryController invController;
+    
 
     eUI_STATE uiState;
+    public bool externalMenuExit = false;
     
     // Start is called before the first frame update
     void Start()
@@ -30,6 +34,7 @@ public class UIController : MonoBehaviour
         invController = inventory.GetComponent<InventoryController>();
         mainUi.SetActive(true);
         inventory.SetActive(false);
+        menu.SetActive(false);
     }
 
     // Update is called once per frame
@@ -47,7 +52,12 @@ public class UIController : MonoBehaviour
         {
             case eUI_STATE.DEFAULT:
                 if (invKey) uiState = eUI_STATE.OPEN_INV;
-                
+                else if (cancelKey)
+                {
+                    mainUi.SetActive(false);
+                    menu.SetActive(true);
+                    uiState = eUI_STATE.MAIN_MENU;
+                }
                 break;
             case eUI_STATE.OPEN_INV:
                 var itemList = playerController.Inventory;
@@ -69,6 +79,22 @@ public class UIController : MonoBehaviour
                     uiState = eUI_STATE.DEFAULT;
 				}
                 break;
+            case eUI_STATE.MAIN_MENU:
+                if (cancelKey || externalMenuExit)
+                {
+                    mainUi.SetActive(true);
+                    menu.SetActive(false);
+                    externalMenuExit = false;
+                    uiState = eUI_STATE.DEFAULT;
+                }
+
+                break;
         }
+    }
+
+    public void ExitMenuExternal()
+    {
+        if(uiState == eUI_STATE.MAIN_MENU)
+            externalMenuExit = true;
     }
 }
