@@ -8,6 +8,7 @@ public class BookShelf : MonoBehaviour, IInteractable
     public float speedOfOpening = 20f;
     public float bookOpenDistance = 0.1f;
     public GameObject bookCase ;
+    public AudioSource source;
     
     
     public DoorState state = DoorState.CLOSED;
@@ -68,6 +69,7 @@ public class BookShelf : MonoBehaviour, IInteractable
             state = DoorState.CLOSING;
             transform.localPosition -= Vector3.left * bookOpenDistance;
         }
+        source.Play();
         Unhighlight();
     }
 

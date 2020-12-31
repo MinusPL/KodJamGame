@@ -9,6 +9,9 @@ public class Drawer : MonoBehaviour, IInteractable
     public float speedOfOpening = 5f;
     private Vector3 initialPosiiton;
     // Start is called before the first frame update
+
+    public AudioSource drawerSound;
+
     void Start()
     {
         initialPosiiton = transform.localPosition;
@@ -61,6 +64,7 @@ public class Drawer : MonoBehaviour, IInteractable
         {
             state = DoorState.OPENING;
         }
+        drawerSound.Play();
     }
 
     public void Highlight()

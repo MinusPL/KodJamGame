@@ -20,6 +20,8 @@ public class Door : MonoBehaviour, IInteractable
     private Vector3 initialPosiiton;
     private Quaternion initialRotation;
 
+    public AudioSource doorSound;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -100,6 +102,7 @@ public class Door : MonoBehaviour, IInteractable
         {
             state = DoorState.OPENING;
         }
+        doorSound.Play();
     }
 
     public void Highlight()

@@ -77,6 +77,8 @@ public class PlayerController : MonoBehaviour, IInventory
 
     List<GameObject> enemies = new List<GameObject>();
 
+    public AudioSource footsteps;
+
     void Start()
     {
         Inventory = new List<IItemStack>();
@@ -306,6 +308,8 @@ public class PlayerController : MonoBehaviour, IInventory
         Vector3 targetVelocity = worldInputDir * currentSpeed;
         velocity = Vector3.SmoothDamp(velocity, targetVelocity, ref smoothV, smoothMoveTime);
 
+        footsteps.pitch = Input.GetButton("Run") ? 1.5f : 1.0f;
+
         verticalVelocity -= gravity * Time.deltaTime;
         if (verticalVelocity < maxFallingSpeed) verticalVelocity = maxFallingSpeed;
 
@@ -349,6 +353,18 @@ public class PlayerController : MonoBehaviour, IInventory
 
         transform.eulerAngles = Vector3.up * smoothYaw;
         _cam.transform.localEulerAngles = Vector3.right * smoothPitch;
+
+        if(controller.velocity.magnitude > 0.0f )
+		{
+            if (footsteps.isPlaying == false)
+            {
+                footsteps.Play();
+            }
+        }
+        else
+		{
+            footsteps.Stop();
+		}
     }
     public void AddItem(IItemStack item)
     {
