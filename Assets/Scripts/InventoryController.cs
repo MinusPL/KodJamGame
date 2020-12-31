@@ -12,7 +12,7 @@ public class InventoryController : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         slots = new List<GameObject>();
         for(int i = 0; i < slotCount; i++)
