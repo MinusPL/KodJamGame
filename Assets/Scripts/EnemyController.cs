@@ -7,6 +7,15 @@ using UnityEngine.AI;
 [RequireComponent(typeof (NavMeshAgent))]
 public class EnemyController : MonoBehaviour
 {
+    public enum eSTATE
+	{
+        IDLE,
+        WANDER,
+        WALK_TO_POINT,
+        FOLLOW,
+        ATTACK
+	}
+    
     public float lookRadius = 10f;
     public float attackRadius = 4.0f;
     public float damage = 4.0f;
@@ -20,6 +29,8 @@ public class EnemyController : MonoBehaviour
     private NavMeshAgent agent;
     private CharacterController characterController;
 
+    private eSTATE state;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,10 +43,60 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         Debug.DrawLine(transform.position, transform.position + (transform.forward * 10.0f), Color.blue);
-        if (target == null) return;
+        
         
         Debug.DrawLine(transform.position, transform.position + (target.transform.position - transform.position).normalized * 10.0f, Color.green);
 
+        System.Random rnd = new System.Random();
+        int check = 0;
+        switch (state)
+		{
+            case eSTATE.IDLE:
+                anim.SetBool("moving", false);
+                check = rnd.Next(1, 100);
+                if (lookForPlayer())
+                {
+                    agent.SetDestination(target.position);
+                    FaceTarget();
+                    state = eSTATE.FOLLOW;
+                }
+                else
+                {
+                    if (check <= 25) state = eSTATE.WANDER;
+                }
+			break;
+            case eSTATE.WANDER:
+                anim.SetBool("moving", false);
+                rnd = new System.Random();
+                check = rnd.Next(1, 100);
+                if (lookForPlayer())
+                {
+                    agent.SetDestination(target.position);
+                    FaceTarget();
+                    state = eSTATE.FOLLOW;
+                }
+                else
+                {
+                    if (check <= 20)
+					{
+                        state = eSTATE.IDLE;
+                    }
+                    else
+					{
+                        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * 5.0f;
+                        randomDirection += transform.position;
+                        NavMeshHit hit;
+                        NavMesh.SamplePosition(randomDirection, out hit, 5.0f, 1);
+                        agent.SetDestination(hit.position);
+                        state = eSTATE.WALK_TO_POINT;
+                    }
+                }
+                break;
+            case eSTATE.WALK_TO_POINT:
+                anim.SetBool("moving", true);
+                
+                break;
+		}
 
         float distance = Vector3.Distance(target.position, transform.position);
 
@@ -60,6 +121,23 @@ public class EnemyController : MonoBehaviour
                 attackTimer = attackCooldown;
                 OnAttack();
             }
+        }
+    }
+
+    private bool lookForPlayer()
+	{
+        if (target == null) return false;
+        else
+		{
+            float distance = Vector3.Distance(target.position, transform.position);
+            if (distance <= lookRadius)
+			{
+                return true;
+			}
+            else
+			{
+                return false;
+			}
         }
     }
 
