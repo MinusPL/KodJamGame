@@ -15,6 +15,7 @@ public
     public Material HighlightMaterial;
 
     private Material[] initialMaterials;
+    private bool collectable = true;
 
     protected void Start()
     {
@@ -26,6 +27,7 @@ public
     {
         playerController.AddItem(itemStack);
         playerController.inventoryController.AddItem(itemStack);
+        collectable = false;
         Destroy(gameObject);
     }
 
@@ -49,6 +51,7 @@ public
     public void Unhighlight()
     {
         Debug.Log("UNHIGHLIGHT");
-        gameObject.GetComponent<Renderer>().materials = initialMaterials;
+        if(collectable)
+            gameObject.GetComponent<Renderer>().materials = initialMaterials;
     }
 }

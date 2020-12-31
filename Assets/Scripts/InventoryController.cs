@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,12 +36,14 @@ public class InventoryController : MonoBehaviour
 
     public void AddItemInSlot(IItemStack item, int slotNumber)
 	{
+		Debug.Log(slots[slotNumber]);
+		Debug.Log(slots[slotNumber].GetComponent<InvSlot>());
         slots[slotNumber].GetComponent<InvSlot>().SetItem(item);
 	}
 
     public void AddItem(IItemStack item)
 	{
-        int i = slots.FindIndex(x => x.GetComponent<InvSlot>().item == null);
-        AddItemInSlot(item, i);
+		int i = slots.FindIndex(x => x.GetComponent<InvSlot>().item == null);
+		AddItemInSlot(item, i);
 	}
 }

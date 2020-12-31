@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour, IInventory
 {
@@ -19,6 +20,15 @@ public class PlayerController : MonoBehaviour, IInventory
 
     public float interactDistance = 20.0f;
     public float collectDistance = 20.0f;
+
+    //Health stuff
+    public float maxHealth = 100.0f;
+    public float healthRegen = 50.0f;
+    public float healthRegenTime = 1.0f; //In Seconds!
+    private float healthRegenTimer;
+    public float currentHealth;
+
+
 
     public float yaw;
     public float pitch;
@@ -43,6 +53,8 @@ public class PlayerController : MonoBehaviour, IInventory
 
     private ICollectable toCollect = null;
     private IInteractable toInteract = null;
+
+
     
     public List<IItemStack> Inventory { get; private set; }
     public GameObject inventoryObject;
@@ -61,6 +73,10 @@ public class PlayerController : MonoBehaviour, IInventory
     bool shouldShowFlashlight = false;
     bool controlsBlocked = false;
 
+    public float flashLightThreshold = -0.8f;
+
+    List<GameObject> enemies = new List<GameObject>();
+
     void Start()
     {
         Inventory = new List<IItemStack>();
@@ -70,6 +86,7 @@ public class PlayerController : MonoBehaviour, IInventory
         _flashlight.enabled = false;
         armFlashlight.SetActive(false);
         armLantern.SetActive(false);
+        currentHealth = maxHealth;
     }
 
     
@@ -77,6 +94,7 @@ public class PlayerController : MonoBehaviour, IInventory
     // Update is called once per frame
     void Update()
     {
+        Debug.DrawLine(_flashlight.transform.position, _flashlight.transform.position + _flashlight.transform.forward * 10.0f, Color.green);
         if (!controlsBlocked)
         {
             MoveCharacter();
@@ -91,12 +109,12 @@ public class PlayerController : MonoBehaviour, IInventory
 
             if (Input.GetButtonDown("Lantern"))
             {
-                choosenLight = 2;
+                choosenLight = choosenLight == 2 ? 0 : 2;
                 ChooseLight();
             }
             if (Input.GetButtonDown("Flashlight"))
             {
-                choosenLight = 1;
+                choosenLight = choosenLight == 1 ? 0 : 1;
                 ChooseLight();
             }
         }
@@ -115,6 +133,25 @@ public class PlayerController : MonoBehaviour, IInventory
                 _flashlight.enabled = shouldShowFlashlight;
                 SphereGrowTime = 0.0f;
                 hidingLantern = false;
+            }
+        }
+
+        //Health update
+        healthRegenTimer += Time.deltaTime;
+        if(healthRegenTimer >= healthRegenTime)
+		{
+            healthRegenTimer = 0.0f;
+            currentHealth += healthRegen;
+            if (currentHealth > maxHealth) currentHealth = maxHealth;
+		}
+
+        //Enemy checks
+        foreach (var enemy in enemies)
+        {
+            enemy.GetComponent<EnemyController>().SetLightFlashed(false);
+            if (Vector3.Dot(_flashlight.transform.forward, enemy.GetComponent<EnemyController>().lightTarget.transform.forward) <= flashLightThreshold && choosenLight == 1)
+            {
+                enemy.GetComponent<EnemyController>().SetLightFlashed(true);
             }
         }
     }
@@ -360,9 +397,46 @@ public class PlayerController : MonoBehaviour, IInventory
         }
         return false;
     }
+    public void DecreaseHealth(float amount)
+    {
+        currentHealth -= amount;
+        if (currentHealth == 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        }
+
+    }
+
+    public float GetHealthRatio()
+	{
+        return currentHealth / maxHealth;
+	}
 
     public void SetControlsBlocked(bool flag)
     {
         this.controlsBlocked = flag;
     }
+
+    public void AddEnemy(GameObject enemy)
+	{
+        enemies.Add(enemy);
+	}
+
+    public void RemoveEnemy(GameObject enemy)
+    {
+        enemies.Remove(enemy);
+    }
+    /*public void OnTriggerEnter(Collider other)
+    {
+        if (choosenLight == 1)
+        {
+            if (other.CompareTag("Enemy"))
+            {
+                if (Vector3.Dot(_flashlight.transform.forward, other.transform.forward) <= flashLightThreshold)
+                {
+                    other.GetComponent<EnemyController>().SetLightFlashed();
+                }
+            }
+        }
+    }*/
 }
