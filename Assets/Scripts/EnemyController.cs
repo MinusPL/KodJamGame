@@ -13,7 +13,9 @@ public class EnemyController : MonoBehaviour
         WANDER,
         WALK_TO_POINT,
         FOLLOW,
-        ATTACK
+        ATTACK,
+        IDLE_SCARED,
+        SCARED
 	}
     
     public float lookRadius = 10f;
@@ -29,7 +31,9 @@ public class EnemyController : MonoBehaviour
     private NavMeshAgent agent;
     private CharacterController characterController;
 
-    private eSTATE state;
+    public eSTATE state;
+
+    public bool lightFlashed = false;
 
     // Start is called before the first frame update
     void Start()
@@ -42,16 +46,18 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.DrawLine(transform.position, transform.position + (transform.forward * 10.0f), Color.blue);
+        //Debug.DrawLine(transform.position, transform.position + (transform.forward * 10.0f), Color.blue);
         
         
-        Debug.DrawLine(transform.position, transform.position + (target.transform.position - transform.position).normalized * 10.0f, Color.green);
+       //Debug.DrawLine(transform.position, transform.position + (target.transform.position - transform.position).normalized * 10.0f, Color.green);
 
         System.Random rnd = new System.Random();
         int check = 0;
         switch (state)
 		{
             case eSTATE.IDLE:
+                anim.SetBool("flashed", false);
+                agent.velocity = Vector3.zero;
                 anim.SetBool("moving", false);
                 check = rnd.Next(1, 100);
                 if (lookForPlayer())
@@ -60,13 +66,19 @@ public class EnemyController : MonoBehaviour
                     FaceTarget();
                     state = eSTATE.FOLLOW;
                 }
+                else if (lightFlashed)
+                {
+                    state = eSTATE.IDLE_SCARED;
+                }
                 else
                 {
-                    if (check <= 25) state = eSTATE.WANDER;
+                    Debug.Log(check);
+                    if (check <= 2) state = eSTATE.WANDER;
                 }
-			break;
+			    break;
             case eSTATE.WANDER:
                 anim.SetBool("moving", false);
+                anim.SetBool("flashed", false);
                 rnd = new System.Random();
                 check = rnd.Next(1, 100);
                 if (lookForPlayer())
@@ -77,7 +89,7 @@ public class EnemyController : MonoBehaviour
                 }
                 else
                 {
-                    if (check <= 20)
+                    if (check <= 5)
 					{
                         state = eSTATE.IDLE;
                     }
@@ -94,11 +106,89 @@ public class EnemyController : MonoBehaviour
                 break;
             case eSTATE.WALK_TO_POINT:
                 anim.SetBool("moving", true);
-                
+                anim.SetBool("flashed", false);
+                //Debug.Log(Vector3.Distance(transform.position, agent.destination));
+                if (lookForPlayer())
+                {
+                    agent.SetDestination(target.position);
+                    FaceTarget();
+                    state = eSTATE.FOLLOW;
+                }
+                else if (lightFlashed)
+                {
+                    state = eSTATE.SCARED;
+                }
+                else if (Vector3.Distance(transform.position, agent.destination) <= 2f)
+                {
+                    state = eSTATE.IDLE;
+                }
                 break;
-		}
+            case eSTATE.FOLLOW:
+            {
+                anim.SetBool("flashed", false);
+                agent.SetDestination(target.position);
+                FaceTarget();
+                anim.SetBool("moving", true);
+                float distance = Vector3.Distance(target.position, transform.position);
+                if (!lookForPlayer())
+                {
+                    state = eSTATE.IDLE;
+                }
+                else if (lightFlashed)
+                {
+                    state = eSTATE.SCARED;
+                }
+                else if (distance <= attackRadius)
+                {
+                    state = eSTATE.ATTACK;
+                }
+            }
+                break;
+            case eSTATE.ATTACK:
+                agent.velocity = Vector3.zero;
+                FaceTarget();
+                if (attackTimer <= 0.0f)
+                {
+                    attackTimer = attackCooldown;
+                    OnAttack();
+                }
 
-        float distance = Vector3.Distance(target.position, transform.position);
+                if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+                {
+                    state = eSTATE.FOLLOW;    
+                }
+                else if (lightFlashed)
+                {
+                    state = eSTATE.SCARED;
+                }
+                break;
+            case eSTATE.IDLE_SCARED:
+                anim.SetBool("flashed", true);
+                agent.velocity = Vector3.zero;
+                if (!lookForPlayer())
+                {
+                    lightFlashed = false;
+                }
+                if (!lightFlashed)
+                {
+                    state = eSTATE.IDLE;
+                }
+                break;
+            case eSTATE.SCARED:
+                anim.SetBool("flashed", true);
+                agent.velocity = Vector3.zero;
+                if (!lookForPlayer())
+                {
+                    lightFlashed = false;
+                }
+                if (!lightFlashed)
+                {
+                    state = eSTATE.FOLLOW;
+                }
+                break;
+        }
+
+        /*float distance = Vector3.Distance(target.position, transform.position);
 
         if (distance <= lookRadius)
         {
@@ -110,18 +200,18 @@ public class EnemyController : MonoBehaviour
             {
                 FaceTarget();
             }
-        }
+        }*/
 
         attackTimer -= Time.deltaTime;
 
-        if (distance <= attackRadius)
+        /*if (distance <= attackRadius)
         {
             if (attackTimer <= 0.0f)
             {
                 attackTimer = attackCooldown;
                 OnAttack();
             }
-        }
+        }*/
     }
 
     private bool lookForPlayer()
@@ -206,8 +296,9 @@ public class EnemyController : MonoBehaviour
 
     public void SetLightFlashed(bool flag)
 	{
-        anim.SetBool("flashed",flag);
-	}
+        //anim.SetBool("flashed",flag);
+        lightFlashed = flag;
+    }
 
     public void OnTriggerEnter(Collider other)
     {

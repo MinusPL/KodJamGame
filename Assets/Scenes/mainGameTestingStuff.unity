@@ -3828,6 +3828,7 @@ MonoBehaviour:
   attackCooldown: 2
   model: {fileID: 981797529}
   lightTarget: {fileID: 0}
+  state: 0
 --- !u!4 &1305064865
 Transform:
   m_ObjectHideFlags: 0
@@ -5683,7 +5684,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1622922180175825951, guid: 8dfe9bb56c1e4f64da29c076799eebec, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.04
+      value: 24.36
       objectReference: {fileID: 0}
     - target: {fileID: 1622922180175825951, guid: 8dfe9bb56c1e4f64da29c076799eebec, type: 3}
       propertyPath: m_LocalPosition.y
