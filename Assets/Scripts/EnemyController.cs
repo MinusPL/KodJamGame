@@ -72,7 +72,7 @@ public class EnemyController : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log(check);
+                    //Debug.Log(check);
                     if (check <= 2) state = eSTATE.WANDER;
                 }
 			    break;
