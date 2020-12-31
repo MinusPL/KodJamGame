@@ -105,9 +105,10 @@ GameObject:
   - component: {fileID: 2325167143473460518}
   - component: {fileID: 2325167143473460519}
   - component: {fileID: 462280833411923479}
+  - component: {fileID: 9096773740854171146}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -151,13 +152,21 @@ MonoBehaviour:
   gravity: 18
   maxFallingSpeed: -10
   interactDistance: 20
+  collectDistance: 20
+  maxHealth: 100
+  healthRegen: 50
+  healthRegenTime: 1
+  currentHealth: 0
   yaw: 0
   pitch: 0
   mouseSensitivity: 10
   pitchMinmax: {x: -40, y: 85}
   rotationSmoothTime: 0.1
+  inventoryObject: {fileID: 0}
+  inventoryController: {fileID: 0}
   armLantern: {fileID: 7034339571348726018}
   armFlashlight: {fileID: 8913801429295277737}
+  flashLightThreshlod: -0.8
 --- !u!143 &2325167143473460519
 CharacterController:
   m_ObjectHideFlags: 0
@@ -190,6 +199,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpherePrefab: {fileID: 6803558733935030977, guid: 4a7dfc5a4ba551c4aa1cde3fac1de5fc, type: 3}
   starter: {fileID: 5263583102673305338}
+  smallScale: 0.1
+  bigScale: 50
+  growTime: 3
+--- !u!135 &9096773740854171146
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2325167143473460512}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2325167143883192840
 GameObject:
   m_ObjectHideFlags: 0
@@ -459,7 +484,7 @@ GameObject:
   - component: {fileID: 2325167144074252884}
   m_Layer: 0
   m_Name: Capsule
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
